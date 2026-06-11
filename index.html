@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Dänemark Bingo Online</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #111;
+  color: white;
+  text-align: center;
+}
+
+input, button {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.cell {
+  background: #222;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.cell.checked {
+  background: #00c853;
+  text-decoration: line-through;
+}
+
+#error {
+  color: red;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🍻 Dänemark Bingo ONLINE</h1>
+
+<input id="player" placeholder="Spielername (z.B. jesse)">
+<button onclick="start()">Start</button>
+
+<p id="error"></p>
+
+<h2 id="title"></h2>
+<div id="grid"></div>
+
+<script>
+
+// ======================
+// 🧠 SPIELER (16er Basis)
+// ======================
+
+const BASE = [
+"Behauptet, nicht betrunken zu sein",
+"Verliert kurzzeitig sein Handy",
+"Grobe Dummheit",
+"Diskutiert über Regeln",
+"Verschüttet Getränk (Pitscher)"
+];
+
+const CARDS = {
+
+jesse: [
+"Kotzt","Last Man Standing","Bierpong verlieren","Mischkonsum",
+"Exxt Bier","Wettkampf aus allem","Glas verlieren","Letztes Spiel",
+"Fällt fast","Zu laut","Regeln Streit","Bier suchen",
+"Handy weg","Nicht betrunken","Chaos","Unnötige Ansage"
+],
+
+kush: [
+"Raucht 1 Schachtel am Tag","Last Man Standing","Mischkonsum","Kippe schnorren",
+"Exxt Bier","DJ werden","Allein sitzen","Glas vergessen",
+"Handy weg","Nicht betrunken","Chaos","Diskussion",
+"Regeln","Zu laut","Alles egal","Bier verlieren"
+],
+
+jani: [
+"Beleidigt Patrice","Jatta bester Spieler","Küssen Versuch","Einer geht noch",
+"Schreit durchs Haus","Exxt Bier","Wettkampf","Glas verlieren",
+"Handy weg","Zu laut","Ansage","Chaos",
+"Lacht über Witz","Regeln","Bier verschüttet","Unnötig laut"
+],
+
+patrice: [
+"Kuschelt Ruhser","Wettschein kommt nicht","Rage Cage Abbruch","Regel Streit",
+"Exxt Bier","DJ werden","Musik beschweren","Wettkampf",
+"Glas falsch","Zu laut","Ansage","Chaos",
+"Handy weg","Diskussion","Bier suchen","Unnötig"
+]
+
+};
+
+// ======================
+
+function start(){
+
+let name = document.getElementById("player").value.trim().toLowerCase();
+let error = document.getElementById("error");
+
+error.innerText = "";
+
+if(!CARDS[name]){
+error.innerText = "Spieler nicht gefunden (jesse, kush, jani, patrice)";
+return;
+}
+
+document.getElementById("title").innerText = "Spieler: " + name;
+
+let data = BASE.concat(CARDS[name]);
+
+let grid = document.getElementById("grid");
+grid.innerHTML = "";
+
+let saved = JSON.parse(localStorage.getItem(name) || "{}");
+
+data.forEach((t,i)=>{
+
+let div = document.createElement("div");
+div.className = "cell";
+
+if(saved[i]) div.classList.add("checked");
+
+div.innerText = t;
+
+div.onclick = ()=>{
+
+saved[i] = !saved[i];
+localStorage.setItem(name, JSON.stringify(saved));
+
+div.classList.toggle("checked");
+};
+
+grid.appendChild(div);
+});
+
+}
+
+</script>
+
+</body>
+</html>
